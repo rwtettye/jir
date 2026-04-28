@@ -1,0 +1,22 @@
+name: Run CCC Container
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # every 30 minutes
+  workflow_dispatch:         # allow manual runs
+
+jobs:
+  run-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300     # 5 hours
+
+    steps:
+      - name: Pull image
+        run: docker pull rwtettye/ccc:latest
+
+      - name: Run container with NET_ADMIN and /dev/net/tun
+        run: |
+          sudo docker run --rm \
+            --cap-add=NET_ADMIN \
+            --device=/dev/net/tun \
+            rwtettye/ccc:latest
